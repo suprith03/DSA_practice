@@ -311,9 +311,48 @@ int maxSubArray(vector<int>& arr) {
     return maxSum;
 }
 
+// BFS Taversal
+
+vector<int>bfsTraversal(int n, vector<vector<int>>& adj) {
+    vector<int> vis(n, 0);
+    vis[0] = 1;
+
+    queue<int> q;
+    q.push(0);
+
+    vector<int> bfs;
+    
+    while(!q.empty()) {
+        int node = q.front();
+        q.pop();
+        bfs.push_back(node);
+
+        for (auto it: adj[node]) {
+            if(!vis[it]) {
+                vis[it] = 1;
+                q.push(it);
+            }
+        }
+    }
+    return bfs;
+}
+
+// DFS Traversal
+
+void dfs (int node, vector<vector<int>>& adj, vector<int>& vis, vector<int>& res) {
+    vis[node] = 1;
+    res.push_back(node);
+
+    for (int neighbour: adj[node]) {
+        if(!vis[neighbour]) {
+            dfs(neighbour, adj, vis, res);
+        }
+    }
+}
+
 int main() {
-    int n;
-    cin >> n;
+    // int n;
+    // cin >> n;
     // vector<int>arr;
     // for(int i=0;i<n;i++) {
     //     int ele;
@@ -346,12 +385,34 @@ int main() {
     // int ways = dp_climbStairs(n);
     // cout << ways;
 
-    vector<int> arr(n);
+    // vector<int> arr(n);
  
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
+    // for (int i = 0; i < n; i++) {
+    //     cin >> arr[i];
+    // }
+    // cout << maxSubArray(arr);
+
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> adj(n);
+
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
-    cout << maxSubArray(arr);
+    vector<int> vis(n, 0);
+    vector<int> res;
+
+    dfs(0, adj, vis, res);
+    // bfs 
+    // vector<int> res = bfsTraversal(n, adj);
+
+    for (int node: res) {
+        cout << node << " ";
+    }
 
     return 0;
 }
